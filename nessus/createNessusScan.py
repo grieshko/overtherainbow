@@ -11,12 +11,13 @@ scan_name="Name of the scan"
 nessus_url = 'https://127.0.0.1:8834'
 access_key = 'ACCESS_KEY created in the Nessus interface'
 secret_key = 'SECRET_KEY created in the Nessus interface'
-ip_ranges_file = "FILE WITH IP/IPRanges to scan"
+input_file = "FILE WITH IP/IPRanges to scan"
 ############################################################################
 headers = {'Content-type': 'application/json', 'X-ApiKeys': 'accessKey='+access_key+'; secretKey='+secret_key}
 
 #GET IPs to scan
-IPsList = open(ip_ranges_file, 'r')
+f = open(input_file, 'r')
+IPsList = f.read()
 
 #Create scan
 data = {
@@ -36,9 +37,9 @@ requests.packages.urllib3.disable_warnings()
 req = requests.request('POST', nessus_url+'/scans', headers=headers, data=json.dumps(data), verify=False)
 data = req.json()
 for key, value in data.items():
-	for item in value.items():
-		if str(item[0]) == "id":
-			sid=str(item[1])
+    for item in value.items():
+        if str(item[0]) == "id":
+            sid=str(item[1])
 
 #Launch scan
 requests.packages.urllib3.disable_warnings()
